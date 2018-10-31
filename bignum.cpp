@@ -163,7 +163,7 @@ int Bignum::findSign(const Bignum & num)
 uint32_t Bignum::chop(const uint8_t d[], uint32_t size)
 {
   uint32_t i = size - 1;
-  while (d[i--] == 0) {
+  while (i > 0 && d[i--] == 0) {
     size--;
   }
   return size == 0 ? 1 : size;
@@ -324,7 +324,6 @@ Bignum Bignum::operator-(const Bignum & num)
   const Bignum * min;
   bool invertSign;
   int sign = findSign(num);
-
   if (sign == 0) {
     Bignum op1 = *this;
     Bignum op2 = num;
@@ -390,10 +389,20 @@ Bignum Bignum::operator-(const Bignum & num)
   else {
     neg = false;
   }
-
+  
   Bignum result = Bignum(newData, size, neg);
   delete[] newData;
   return result;
+}
+
+Bignum Bignum::operator-(int num)
+{
+  return this->operator-(Bignum(num));
+}
+
+Bignum operator-(int num, Bignum num2)
+{
+  return Bignum(num).operator-(num2);
 }
 
 Bignum Bignum::operator*(const Bignum & num)
