@@ -433,3 +433,13 @@ Bignum Bignum::operator*(const Bignum & num)
   delete[] newData;
   return result;
 }
+
+Bignum Bignum::operator*(int num)
+{
+  return this->operator*(Bignum(num));
+}
+
+Bignum operator*(int num, Bignum num2)
+{
+  return num2.operator*(num);
+}

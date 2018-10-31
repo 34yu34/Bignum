@@ -12,6 +12,6 @@ int main(int argc, char const * argv[])
   Bignum cc = 3746487;
   Bignum d = Bignum("-100000000000000000000000000000000");
   Bignum e = b;
-  cout << b - cc << endl;
+  cout << 7 * cc << endl;
   return 0;
 }
