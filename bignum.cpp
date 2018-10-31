@@ -123,6 +123,14 @@ int Bignum::findSign(const Bignum& num) {
     }
 }
 
+uint32_t Bignum::chop(const uint8_t d[], uint32_t size) {
+    uint32_t i = size-1;
+    while (d[i--] == 0) {
+        size--;
+    }
+    return size == 0 ? 1 : size;
+}
+
 bool Bignum::operator<(const Bignum& num) {
     return operate(num, [](int a, int b) {return a < b;});
 }
@@ -175,10 +183,10 @@ Bignum Bignum::operator+(const Bignum& num) {
             if (ret != 0) {
                 newData[i] = ret;
                 result = Bignum(newData, big, sign == -1);
-                delete newData;
+                delete[] newData;
             } else {
                 result = Bignum(newData, (big-1), sign == -1); 
-                delete newData;
+                delete[] newData;
             }
         }
     }
@@ -236,12 +244,7 @@ Bignum Bignum::operator-(const Bignum & num) {
         }
     }
 
-    uint32_t size = max->dataSize;
-    uint32_t i = max->dataSize;
-    while (newData[i--] == 0) {
-        size--;
-    }
-    size = size == 0 ? 1 : size;
+    uint32_t size = chop(newData, max->dataSize);
 
     bool neg;
     if (sign == -1 && invertSign) {
@@ -255,7 +258,34 @@ Bignum Bignum::operator-(const Bignum & num) {
     }
 
     Bignum result = Bignum(newData, size, neg);
-    delete newData;
+    delete[] newData;
     return result;
 }
 
+Bignum Bignum::operator*(const Bignum& num) {
+    int sign = findSign(num);
+    uint32_t size = dataSize + num.dataSize;
+
+    uint8_t * newData = new uint8_t[size];
+    for (uint32_t i = 0; i < size; i++) {
+        newData[i] = 0;
+    }
+    
+    uint16_t ret = 0;
+    for(uint32_t i = 0; i < dataSize; i++) {
+        for(uint32_t j = 0; j < num.dataSize; j++) {
+            uint16_t val = (uint16_t)data[i] * (uint16_t)num.data[j] + ret;
+            ret = val / 100;
+            newData[i+j] += (uint8_t)(val % 100);
+            if (j +1 == num.dataSize) {
+               newData[i+j+1] = ret;
+               ret = 0;
+           }
+        }
+    }
+    size = chop(newData, size);
+
+    Bignum result = Bignum(newData, size, sign == 0);
+    delete[] newData;
+    return result;
+}

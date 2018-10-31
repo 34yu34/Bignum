@@ -15,6 +15,7 @@ private:
 
     bool operate(const Bignum& num, bool (*fptr)( int, int));
     int findSign(const Bignum& num);
+    uint32_t chop(const uint8_t d[], uint32_t currSize);
 
 public:
     Bignum();
@@ -34,6 +35,7 @@ public:
 
     Bignum operator+(const Bignum& num);
     Bignum operator-(const Bignum& num);
+    Bignum operator*(const Bignum& num);
 
     void put();
 
