@@ -26,12 +26,22 @@ public:
     void operator=(const Bignum& num);
     ~Bignum();
 
-    friend ostream & operator<< (ostream &o, const Bignum&  num);
+    friend ostream & operator<< (ostream &o, const Bignum& num);
     bool operator<(const Bignum& num);
+    bool operator<(int num);
+    friend bool operator<(int num, const Bignum& num2);
     bool operator<=(const Bignum& num);
+    bool operator<=(int num);
+    friend bool operator<=(int num, const Bignum& num2);
     bool operator==(const Bignum& num);
+    bool operator==(int num);
+    friend bool operator==(int num, const Bignum& num2);
     bool operator>=(const Bignum& num);
+    bool operator>=(int num);
+    friend bool operator>=(int num, const Bignum& num2);
     bool operator>(const Bignum& num);
+    bool operator>(int num);
+    friend bool operator>(int num, const Bignum& num2);
 
     Bignum operator+(const Bignum& num);
     Bignum operator-(const Bignum& num);
