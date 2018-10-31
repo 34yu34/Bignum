@@ -10,7 +10,7 @@ private:
     uint32_t dataSize;
     bool neg; 
 
-    void init(char * num);
+    void init(const char * num);
     template <class T> void initSize(T num);
 
     bool operate(const Bignum& num, bool (*fptr)( int, int));
@@ -22,12 +22,14 @@ public:
     static const uint32_t BASE = 100;
 
     Bignum();
-    Bignum(char * num);
+    Bignum(const char * num);
+    Bignum(string num);
     Bignum(int num);
     Bignum(const Bignum& num);
     Bignum(const uint8_t d[],const uint32_t s, bool n);
     void operator=(const Bignum& num);
     void operator=(int num);
+    void operator=(string num);
     ~Bignum();
 
     friend ostream & operator<< (ostream &o, const Bignum& num);

@@ -5,8 +5,12 @@ Bignum::Bignum() {
     init(val);
 }
 
-Bignum::Bignum(char * num) {
+Bignum::Bignum(const char * num) {
     init(num);
+}
+
+Bignum::Bignum(string num) {
+    init(num.c_str());
 }
 
 Bignum::Bignum(int num) {
@@ -29,6 +33,16 @@ Bignum::Bignum(const Bignum& num) {
     }
 }
 
+Bignum::Bignum(const uint8_t d[], const uint32_t s, bool n) {
+    dataSize = s;
+    neg = n;
+    data = new uint8_t[s];
+    for(int i = 0; i < s; i++)
+    {
+        data[i] = d[i]; 
+    }
+}
+
 void Bignum::operator=(const Bignum& num) {
     dataSize = num.dataSize;
     neg = num.neg;
@@ -43,17 +57,11 @@ void Bignum::operator=(int num) {
     *this = Bignum(num);
 }
 
-Bignum::Bignum(const uint8_t d[], const uint32_t s, bool n) {
-    dataSize = s;
-    neg = n;
-    data = new uint8_t[s];
-    for(int i = 0; i < s; i++)
-    {
-        data[i] = d[i]; 
-    }
+void Bignum::operator=(string num) {
+    *this = Bignum(num.c_str());
 }
 
-void Bignum::init(char * num) {
+void Bignum::init(const char * num) {
    
     if (num[0] == '-') {
         neg = true;
