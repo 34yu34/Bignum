@@ -1,5 +1,8 @@
 #include "bignum.h"
 
+/*********************************************************************
+* Initializer
+*********************************************************************/
 Bignum::Bignum()
 {
   char val[2] = "0";
@@ -109,6 +112,9 @@ Bignum::~Bignum()
   delete data;
 }
 
+/*********************************************************************
+* Printing
+*********************************************************************/
 ostream & operator<<(ostream & o, const Bignum & num)
 {
   if (num.neg) {
@@ -123,6 +129,9 @@ ostream & operator<<(ostream & o, const Bignum & num)
   return o;
 }
 
+/*********************************************************************
+* Helpers
+*********************************************************************/
 bool Bignum::operate(const Bignum & num, bool (*fptr)(int, int))
 {
   if (dataSize == num.dataSize) {
@@ -160,6 +169,9 @@ uint32_t Bignum::chop(const uint8_t d[], uint32_t size)
   return size == 0 ? 1 : size;
 }
 
+/*********************************************************************
+* Bool Operator
+*********************************************************************/
 bool Bignum::operator<(const Bignum & num)
 {
   return operate(num, [] (int a, int b) {
@@ -245,6 +257,9 @@ bool operator==(int num, Bignum num2)
   return num2 == (num);
 }
 
+/*********************************************************************
+* Arithmetics Operations
+*********************************************************************/
 Bignum Bignum::operator+(const Bignum & num)
 {
   int sign = findSign(num);
