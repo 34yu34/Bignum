@@ -151,9 +151,8 @@ bool Bignum::operator<(int num) {
     return *this < Bignum(num);
 }
 
-bool operator<(int num, const Bignum& num2) {
-    Bignum n = num2;
-    return n < (num);
+bool operator<(int num, Bignum num2) {
+    return num2 < (num);
 }
 
 bool Bignum::operator>(const Bignum& num) {
@@ -164,9 +163,8 @@ bool Bignum::operator>(int num) {
     return *this > Bignum(num);
 }
 
-bool operator>(int num, const Bignum& num2) {
-    Bignum n = num2;
-    return n > (num);
+bool operator>(int num, Bignum num2) {
+    return num2 > (num);
 }
 
 bool Bignum::operator<=(const Bignum& num) {
@@ -177,9 +175,8 @@ bool Bignum::operator<=(int num) {
     return *this <= Bignum(num);
 }
 
-bool operator<=(int num, const Bignum& num2) {
-    Bignum n = num2;
-    return n <= (num);
+bool operator<=(int num, Bignum num2) {
+    return num2 <= (num);
 }
 
 bool Bignum::operator>=(const Bignum& num) {
@@ -190,9 +187,8 @@ bool Bignum::operator>=(int num) {
     return *this >= Bignum(num);
 }
 
-bool operator>=(int num, const Bignum& num2) {
-    Bignum n = num2;
-    return n >= (num);
+bool operator>=(int num, Bignum num2) {
+    return num2 >= (num);
 }
 
 bool Bignum::operator==(const Bignum& num) {
@@ -203,9 +199,8 @@ bool Bignum::operator==(int num) {
     return *this == Bignum(num);
 }
 
-bool operator==(int num, const Bignum& num2) {
-    Bignum n = num2;
-    return n == (num);
+bool operator==(int num, Bignum num2) {
+    return num2 == (num);
 }
 
 Bignum Bignum::operator+(const Bignum& num) {

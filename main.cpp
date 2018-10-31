@@ -4,7 +4,7 @@
 #include <string>
 
 using namespace std;
-main(int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
     Bignum a = Bignum("2");
     Bignum b = 4568217;
