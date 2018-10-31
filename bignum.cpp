@@ -1,7 +1,7 @@
 #include "bignum.h"
 
 Bignum::Bignum() {
-    char * val = "0";
+    char val[2] = "0";
     init(val);
 }
 
@@ -75,16 +75,19 @@ Bignum::~Bignum() {
     delete data;
 }
 
-ostream & operator<< (ostream & o, const Bignum num) {
-    for(int i = num.dataSize - 1; i >= 0; i--) {  
+ostream & operator<< (ostream & o, const Bignum & num) {
+    for(int i = num.dataSize - 1; i >= 0; i--) {
+        if (num.data[i] < 10 && i != num.dataSize - 1) {
+            o << '0';
+        }
         o << (int)num.data[i]; 
     }
     return o;
 }
 
-const bool Bignum::operate(const Bignum& num, bool (*fptr)( int, int)) {
+bool Bignum::operate(const Bignum& num, bool (*fptr)( int, int)) {
     if (dataSize == num.dataSize) {
-        for(int i = dataSize; i >= 0; i--) {
+        for(int i = dataSize-1; i >= 0; i--) {
             if (data[i] != num.data[i]) {
                 return fptr(data[i], num.data[i]);
             }
@@ -123,13 +126,13 @@ const Bignum Bignum::operator+(const Bignum& num) {
     for(int i = 0; i < big; i++) {
         if (dataSize > i && num.dataSize > i) {
             newData[i] = (data[i] + num.data[i] + ret) % 100;
-            ret = (data[i] + num.data[i]) / 100;
+            ret = (data[i] + num.data[i] + ret) / 100;
         } else if (dataSize > i) {
             newData[i] = (data[i] + ret) % 100;
-            ret = data[i] / 100;
+            ret = (data[i]+ret) / 100;
         } else if (num.dataSize > i) {
             newData[i] = (num.data[i] + ret) % 100;
-            ret = num.data[i] / 100;
+            ret = (num.data[i]+ret) / 100;
         } else {
             if (ret != 0) {
                 newData[i] = ret;
@@ -140,3 +143,4 @@ const Bignum Bignum::operator+(const Bignum& num) {
         }
     }
 }
+

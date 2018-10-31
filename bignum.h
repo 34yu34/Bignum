@@ -21,12 +21,9 @@ public:
     Bignum(int num);
     Bignum(const Bignum& num);
     Bignum(const uint8_t d[],const uint32_t s);
-
-    
     ~Bignum();
 
-    friend ostream & operator<< (ostream &o, const Bignum num);
-
+    friend ostream & operator<< (ostream &o, const Bignum&  num);
     const bool operator<(const Bignum& num);
     const bool operator<=(const Bignum& num);
     const bool operator==(const Bignum& num);
