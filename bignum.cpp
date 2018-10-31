@@ -15,8 +15,8 @@ Bignum::Bignum(int num) {
     data = new uint8_t[dataSize]; 
     for(int i = 0; i < dataSize; i++)
     {
-        data[i] = num % 100;
-        num /= 100;
+        data[i] = num % BASE;
+        num /= BASE;
     }
 }
 
@@ -37,6 +37,10 @@ void Bignum::operator=(const Bignum& num) {
     for(int i = 0; i< dataSize; i++){
         data[i] = num.data[i];
     }
+}
+
+void Bignum::operator=(int num) {
+    *this = Bignum(num);
 }
 
 Bignum::Bignum(const uint8_t d[], const uint32_t s, bool n) {
@@ -77,7 +81,7 @@ void Bignum::initSize(T num) {
     uint32_t count = 0;
     int finalValue =  num < 0 ? -1 : 0;
     while( num != finalValue ){
-        num /= 100;
+        num /= BASE;
         count++;
     }
     dataSize = count;
@@ -216,14 +220,14 @@ Bignum Bignum::operator+(const Bignum& num) {
     Bignum result;
     for(int i = 0; i < big; i++) {
         if (dataSize > i && num.dataSize > i) {
-            newData[i] = (data[i] + num.data[i] + ret) % 100;
-            ret = (data[i] + num.data[i] + ret) / 100;
+            newData[i] = (data[i] + num.data[i] + ret) % BASE;
+            ret = (data[i] + num.data[i] + ret) / BASE;
         } else if (dataSize > i) {
-            newData[i] = (data[i] + ret) % 100;
-            ret = (data[i]+ret) / 100;
+            newData[i] = (data[i] + ret) % BASE;
+            ret = (data[i]+ret) / BASE;
         } else if (num.dataSize > i) {
-            newData[i] = (num.data[i] + ret) % 100;
-            ret = (num.data[i]+ret) / 100;
+            newData[i] = (num.data[i] + ret) % BASE;
+            ret = (num.data[i]+ret) / BASE;
         } else {
             if (ret != 0) {
                 newData[i] = ret;
@@ -236,6 +240,14 @@ Bignum Bignum::operator+(const Bignum& num) {
         }
     }
     return result;
+}
+
+Bignum Bignum::operator+(int num) {
+    return this->operator+(Bignum(num));
+}
+
+Bignum operator+(int num, Bignum num2) {
+    return num2.operator+(Bignum(num));
 }
 
 Bignum Bignum::operator-(const Bignum & num) {
@@ -272,7 +284,7 @@ Bignum Bignum::operator-(const Bignum & num) {
     for(int i = 0; i < max->dataSize; i++) {
         if (max->dataSize > i && min->dataSize > i) {
             if (min->data[i] > max->data[i] - stole) {
-                newData[i] = (max->data[i] + 100) - min->data[i] - stole;
+                newData[i] = (max->data[i] + BASE) - min->data[i] - stole;
                 stole = 1;
             } else {
                 newData[i] = max->data[i] - min->data[i] - stole;
@@ -280,7 +292,7 @@ Bignum Bignum::operator-(const Bignum & num) {
             }
         } else if (max->dataSize > i) {
             if (0 > max->data[i]-stole) {
-                newData[i] = max->data[i] + 100 - stole;
+                newData[i] = max->data[i] + BASE - stole;
                 stole = 1;
             } else {
                 newData[i] = max->data[i] - stole;
@@ -320,8 +332,8 @@ Bignum Bignum::operator*(const Bignum& num) {
     for(uint32_t i = 0; i < dataSize; i++) {
         for(uint32_t j = 0; j < num.dataSize; j++) {
             uint16_t val = (uint16_t)data[i] * (uint16_t)num.data[j] + ret;
-            ret = val / 100;
-            newData[i+j] += (uint8_t)(val % 100);
+            ret = val / BASE;
+            newData[i+j] += (uint8_t)(val % BASE);
             if (j +1 == num.dataSize) {
                newData[i+j+1] = ret;
                ret = 0;
