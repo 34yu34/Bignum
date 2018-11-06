@@ -478,3 +478,13 @@ Bignum Bignum::operator/(const Bignum & num)
   delete[] newData;
   return ans;
 }
+
+Bignum Bignum::operator/(int num)
+{
+  return this->operator/(Bignum (num));
+}
+
+Bignum operator/(int num, Bignum num2)
+{
+  return Bignum(num) / num2;
+}
