@@ -109,7 +109,7 @@ void Bignum::initSize(T num)
 
 Bignum::~Bignum()
 {
-  delete data;
+  delete[] data;
 }
 
 /*********************************************************************
@@ -121,8 +121,8 @@ ostream & operator<<(ostream & o, const Bignum & num)
     o << "-";
   }
   for (int i = num.dataSize - 1; i >= 0; i--) {
-    if (num.data[i] < 10 && i != num.dataSize - 1) {
-      o << '0';
+    if (num.data[i] < 10 && i + 1 != num.dataSize) {
+      o << "0";
     }
     o << (int)num.data[i];
   }
@@ -389,7 +389,7 @@ Bignum Bignum::operator-(const Bignum & num)
   else {
     neg = false;
   }
-  
+
   Bignum result = Bignum(newData, size, neg);
   delete[] newData;
   return result;
@@ -419,8 +419,9 @@ Bignum Bignum::operator*(const Bignum & num)
   for (uint32_t i = 0; i < dataSize; i++) {
     for (uint32_t j = 0; j < num.dataSize; j++) {
       uint16_t val = (uint16_t)data[i] * (uint16_t)num.data[j] + ret;
-      ret = val / BASE;
       newData[i + j] += (uint8_t)(val % BASE);
+      ret = val / BASE + newData[i + j] / BASE;
+      newData[i + j] %= BASE;
       if (j + 1 == num.dataSize) {
         newData[i + j + 1] = ret;
         ret = 0;
@@ -442,4 +443,38 @@ Bignum Bignum::operator*(int num)
 Bignum operator*(int num, Bignum num2)
 {
   return num2.operator*(num);
+}
+
+Bignum Bignum::operator/(const Bignum & num)
+{
+  bool sign = findSign(num) == 0;
+  if (*this < num) return Bignum(0);
+
+  int maxIndex = 1;
+  Bignum denominator = Bignum(num);
+  denominator.neg = false;
+  Bignum quotient = *this;
+  quotient.neg = false;
+
+  while (denominator * BASE <= quotient) {
+    maxIndex += 1;
+    denominator = denominator * BASE;
+  }
+
+  uint8_t * newData = new uint8_t[maxIndex];
+
+  for (int i = maxIndex - 1; i >= 0; i--) {
+    uint8_t diviser = 0;
+    while (quotient >= (denominator * (diviser + 1))) {
+      diviser++;
+    }
+    newData[i] = diviser;
+    quotient = quotient - (denominator * (diviser));
+    // divide by 100
+    denominator = Bignum(denominator.data + 1, denominator.dataSize - 1, false);
+  }
+
+  Bignum ans = Bignum(newData, maxIndex, neg);
+  delete[] newData;
+  return ans;
 }

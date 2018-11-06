@@ -63,6 +63,8 @@ public:
   Bignum operator*(int num);
   friend Bignum operator*(int num, Bignum num2);
 
+  Bignum operator/(const Bignum & num);
+
   void put();
 
 };
