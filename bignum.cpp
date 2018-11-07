@@ -318,7 +318,8 @@ Bignum operator+(int num, Bignum num2)
   return num2.operator+(Bignum(num));
 }
 
-Bignum Bignum::operator+() const {
+Bignum Bignum::operator+() const
+{
   Bignum ans = *this;
   ans.neg = false;
   return ans;
@@ -411,7 +412,8 @@ Bignum operator-(int num, Bignum num2)
   return Bignum(num).operator-(num2);
 }
 
-Bignum Bignum::operator-() const {
+Bignum Bignum::operator-() const
+{
   Bignum ans = *this;
   ans.neg = !ans.neg;
   return ans;
@@ -457,7 +459,8 @@ Bignum operator*(int num, Bignum num2)
   return num2.operator*(num);
 }
 
-void Bignum::initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) {
+void Bignum::initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index)
+{
   index = 1;
   denominator = +num;
   quotient = +(*this);
@@ -468,7 +471,8 @@ void Bignum::initDivision(const Bignum & num, Bignum & quotient, Bignum & denomi
   }
 }
 
-void Bignum::diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData) {
+void Bignum::diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData)
+{
   uint8_t diviser = 0;
   while (reminder >= (denominator * (diviser + 1))) {
     diviser++;
@@ -502,7 +506,7 @@ Bignum Bignum::operator/(const Bignum & num)
 
 Bignum Bignum::operator/(int num)
 {
-  return this->operator/(Bignum (num));
+  return this->operator/(Bignum(num));
 }
 
 Bignum operator/(int num, Bignum num2)
@@ -510,7 +514,8 @@ Bignum operator/(int num, Bignum num2)
   return Bignum(num) / num2;
 }
 
-Bignum Bignum::operator%(const Bignum & num) {
+Bignum Bignum::operator%(const Bignum & num)
+{
   bool sign = findSign(num) == 0;
   if (*this < num) return Bignum(0);
 
@@ -527,4 +532,14 @@ Bignum Bignum::operator%(const Bignum & num) {
 
   reminder.neg = sign;
   return reminder;
+}
+
+Bignum Bignum::operator%(int num)
+{
+  return this->operator%(Bignum (num));
+}
+
+Bignum operator%(int num, Bignum num2)
+{
+  return Bignum(num).operator%(num2);
 }

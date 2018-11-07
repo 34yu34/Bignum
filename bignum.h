@@ -19,6 +19,7 @@ private:
   uint32_t chop(const uint8_t d[], uint32_t currSize);
   void initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index);
   void diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData);
+
 public:
 
   static const uint32_t BASE = 100;
@@ -71,5 +72,7 @@ public:
   friend Bignum operator/(int num, Bignum num2);
 
   Bignum operator%(const Bignum & num);
+  Bignum operator%(int num);
+  friend Bignum operator%(int num, Bignum num2);
 
 };
