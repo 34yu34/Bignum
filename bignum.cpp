@@ -318,6 +318,12 @@ Bignum operator+(int num, Bignum num2)
   return num2.operator+(Bignum(num));
 }
 
+Bignum Bignum::operator+() const {
+  Bignum ans = *this;
+  ans.neg = false;
+  return ans;
+}
+
 Bignum Bignum::operator-(const Bignum & num)
 {
   const Bignum * max;
@@ -405,6 +411,12 @@ Bignum operator-(int num, Bignum num2)
   return Bignum(num).operator-(num2);
 }
 
+Bignum Bignum::operator-() const {
+  Bignum ans = *this;
+  ans.neg = !ans.neg;
+  return ans;
+}
+
 Bignum Bignum::operator*(const Bignum & num)
 {
   int sign = findSign(num);
@@ -445,36 +457,45 @@ Bignum operator*(int num, Bignum num2)
   return num2.operator*(num);
 }
 
+void Bignum::initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) {
+  index = 1;
+  denominator = +num;
+  quotient = +(*this);
+
+  while (denominator * BASE <= quotient) {
+    index += 1;
+    denominator = denominator * BASE;
+  }
+}
+
+void Bignum::diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData) {
+  uint8_t diviser = 0;
+  while (reminder >= (denominator * (diviser + 1))) {
+    diviser++;
+  }
+  *newData = diviser;
+  reminder = reminder - (denominator * (diviser));
+  // divide by 100
+  denominator = Bignum(denominator.data + 1, denominator.dataSize - 1, false);
+}
+
 Bignum Bignum::operator/(const Bignum & num)
 {
   bool sign = findSign(num) == 0;
   if (*this < num) return Bignum(0);
 
-  int maxIndex = 1;
-  Bignum denominator = Bignum(num);
-  denominator.neg = false;
-  Bignum quotient = *this;
-  quotient.neg = false;
+  int maxIndex;
+  Bignum denominator, quotient;
 
-  while (denominator * BASE <= quotient) {
-    maxIndex += 1;
-    denominator = denominator * BASE;
-  }
+  initDivision(num, quotient, denominator, maxIndex);
 
   uint8_t * newData = new uint8_t[maxIndex];
 
   for (int i = maxIndex - 1; i >= 0; i--) {
-    uint8_t diviser = 0;
-    while (quotient >= (denominator * (diviser + 1))) {
-      diviser++;
-    }
-    newData[i] = diviser;
-    quotient = quotient - (denominator * (diviser));
-    // divide by 100
-    denominator = Bignum(denominator.data + 1, denominator.dataSize - 1, false);
+    diviseStep(quotient, denominator, newData + i);
   }
 
-  Bignum ans = Bignum(newData, maxIndex, neg);
+  Bignum ans = Bignum(newData, maxIndex, sign);
   delete[] newData;
   return ans;
 }
@@ -487,4 +508,23 @@ Bignum Bignum::operator/(int num)
 Bignum operator/(int num, Bignum num2)
 {
   return Bignum(num) / num2;
+}
+
+Bignum Bignum::operator%(const Bignum & num) {
+  bool sign = findSign(num) == 0;
+  if (*this < num) return Bignum(0);
+
+  int maxIndex;
+  Bignum denominator, reminder;
+
+  initDivision(num, reminder, denominator, maxIndex);
+
+  uint8_t * newData = new uint8_t[maxIndex];
+
+  for (int i = maxIndex - 1; i >= 0; i--) {
+    diviseStep(reminder, denominator, newData + i);
+  }
+
+  reminder.neg = sign;
+  return reminder;
 }

@@ -12,6 +12,6 @@ int main(int argc, char const * argv[])
   Bignum cc = 3746487;
   Bignum d = Bignum("-100000000000000000000000000000000");
   Bignum e = b;
-  cout << 36 / a << endl;
+  cout << d % cc << endl;
   return 0;
 }
