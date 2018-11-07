@@ -14,11 +14,11 @@ private:
   template<class T>
   void initSize(T num);
 
-  bool operate(const Bignum & num, bool (* fptr)(int, int));
-  int findSign(const Bignum & num);
-  uint32_t chop(const uint8_t d[], uint32_t currSize);
-  void initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index);
-  void diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData);
+  bool operate(const Bignum & num, bool (* fptr)(int, int)) const;
+  int findSign(const Bignum & num) const;
+  uint32_t chop(const uint8_t d[], uint32_t currSize) const;
+  void initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) const;
+  void diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData) const;
 
 public:
 
@@ -37,42 +37,42 @@ public:
 
   friend ostream & operator<<(ostream & o, const Bignum & num);
 
-  bool operator<(const Bignum & num);
-  bool operator<(int num);
-  friend bool operator<(int num, Bignum num2);
-  bool operator<=(const Bignum & num);
-  bool operator<=(int num);
-  friend bool operator<=(int num, Bignum num2);
-  bool operator==(const Bignum & num);
-  bool operator==(int num);
-  friend bool operator==(int num, Bignum num2);
-  bool operator>=(const Bignum & num);
-  bool operator>=(int num);
-  friend bool operator>=(int num, Bignum num2);
-  bool operator>(const Bignum & num);
-  bool operator>(int num);
-  friend bool operator>(int num, Bignum num2);
+  bool operator<(const Bignum & num) const;
+  bool operator<(int num) const;
+  friend bool operator<(int num, const Bignum & num2);
+  bool operator<=(const Bignum & num) const;
+  bool operator<=(int num) const;
+  friend bool operator<=(int num, const Bignum & num2);
+  bool operator==(const Bignum & num) const;
+  bool operator==(int num) const;
+  friend bool operator==(int num, const Bignum & num2);
+  bool operator>=(const Bignum & num) const;
+  bool operator>=(int num) const;
+  friend bool operator>=(int num, const Bignum & num2);
+  bool operator>(const Bignum & num) const;
+  bool operator>(int num) const;
+  friend bool operator>(int num, const Bignum & num2);
 
-  Bignum operator+(const Bignum & num);
-  Bignum operator+(int num);
-  friend Bignum operator+(int num, Bignum num2);
+  Bignum operator+(const Bignum & num) const;
+  Bignum operator+(int num) const;
+  friend Bignum operator+(int num, const Bignum & num2);
   Bignum operator+() const;
 
-  Bignum operator-(const Bignum & num);
-  Bignum operator-(int num);
-  friend Bignum operator-(int num, Bignum num2);
+  Bignum operator-(const Bignum & num) const;
+  Bignum operator-(int num) const;
+  friend Bignum operator-(int num, const Bignum & num2);
   Bignum operator-() const;
 
-  Bignum operator*(const Bignum & num);
-  Bignum operator*(int num);
-  friend Bignum operator*(int num, Bignum num2);
+  Bignum operator*(const Bignum & num) const;
+  Bignum operator*(int num) const;
+  friend Bignum operator*(int num, const Bignum & num2);
 
-  Bignum operator/(const Bignum & num);
-  Bignum operator/(int num);
-  friend Bignum operator/(int num, Bignum num2);
+  Bignum operator/(const Bignum & num) const;
+  Bignum operator/(int num) const;
+  friend Bignum operator/(int num, const Bignum & num2);
 
-  Bignum operator%(const Bignum & num);
-  Bignum operator%(int num);
-  friend Bignum operator%(int num, Bignum num2);
+  Bignum operator%(const Bignum & num) const;
+  Bignum operator%(int num) const;
+  friend Bignum operator%(int num, const Bignum & num2);
 
 };
