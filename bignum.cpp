@@ -98,6 +98,10 @@ void Bignum::init(const char * num)
 template<class T>
 void Bignum::initSize(T num)
 {
+  if (num == 0) {
+    dataSize = 1;
+    return;
+  }
   uint32_t count = 0;
   int finalValue = num < 0 ? -1 : 0;
   while (num != finalValue) {
