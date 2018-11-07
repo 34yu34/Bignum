@@ -341,79 +341,60 @@ void Bignum::operator+=(int num)
   *this = this->operator+(num);
 }
 
-Bignum Bignum::operator-(const Bignum & num) const
+/*********************************************************************
+* Substraction
+*********************************************************************/
+void Bignum::substractionStep(uint8_t * result, const Bignum * max, const Bignum * min, uint8_t & stole, int index) const
 {
-  const Bignum * max;
-  const Bignum * min;
-  bool invertSign;
-  int sign = findSign(num);
-  if (sign == 0) {
-    Bignum op1 = *this;
-    Bignum op2 = num;
-    if (this->neg) {
-      op2.neg = true;
-      return op1 + op2;
+  if (max->dataSize > index && min->dataSize > index) {
+    if (min->data[index] > max->data[index] - stole) {
+      *result = (max->data[index] + BASE) - min->data[index] - stole;
+      stole = 1;
     }
     else {
-      op2.neg = false;
-      return op1 + op2;
+      *result = max->data[index] - min->data[index] - stole;
+      stole = 0;
+    }
+  }
+  else if (max->dataSize > index) {
+    if (0 > max->data[index] - stole) {
+      *result = max->data[index] + BASE - stole;
+      stole = 1;
+    }
+    else {
+      *result = max->data[index] - stole;
+      stole = 0;
+    }
+  }
+}
+
+Bignum Bignum::operator-(const Bignum & num) const
+{
+  int sign = findSign(num);
+
+  if (sign == 0) {
+    if (this->neg) {
+      return -num + (*this);
+    }
+    else {
+      return num + (+(*this));
     }
   }
 
-  if (*this <= num) {
-    max = &num;
-    min = this;
-    invertSign = true;
-  }
-  else {
-    max = this;
-    min = &num;
-    invertSign = false;
-  }
+  const Bignum * max = *this <= num ? &num : this;
+  const Bignum * min = *this <= num ? this : &num;
+  bool invertSign = *this <= num;
 
   uint8_t * newData = new uint8_t[max->dataSize];
   uint8_t stole = 0;
 
   for (int i = 0; i < max->dataSize; i++) {
-    if (max->dataSize > i && min->dataSize > i) {
-      if (min->data[i] > max->data[i] - stole) {
-        newData[i] = (max->data[i] + BASE) - min->data[i] - stole;
-        stole = 1;
-      }
-      else {
-        newData[i] = max->data[i] - min->data[i] - stole;
-        stole = 0;
-      }
-    }
-    else if (max->dataSize > i) {
-      if (0 > max->data[i] - stole) {
-        newData[i] = max->data[i] + BASE - stole;
-        stole = 1;
-      }
-      else {
-        newData[i] = max->data[i] - stole;
-        stole = 0;
-      }
-    }
+    substractionStep(newData + i, max, min, stole, i);
   }
 
   uint32_t size = chop(newData, max->dataSize);
 
-  bool neg;
-  if (sign == -1 && invertSign) {
-    neg = false;
-  }
-  else if (sign == 1 && invertSign) {
-    neg = true;
-  }
-  else if (sign == -1) {
-    neg = true;
-  }
-  else {
-    neg = false;
-  }
-
-  Bignum result = Bignum(newData, size, neg);
+  Bignum result = Bignum(newData, size, (sign == -1) ^ (invertSign));
   delete[] newData;
   return result;
 }

@@ -19,6 +19,7 @@ private:
   uint32_t chop(const uint8_t d[], uint32_t currSize) const;
 
   void additionStep(uint8_t * result, const Bignum & num1, const Bignum & num2, uint8_t & ret, int index) const;
+  void substractionStep(uint8_t * result, const Bignum * max, const Bignum * min, uint8_t & stole, int index) const;
 
   void initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) const;
   void diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData) const;
