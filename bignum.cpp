@@ -262,53 +262,55 @@ bool operator==(int num, const Bignum & num2)
 }
 
 /*********************************************************************
+**********************************************************************
+*
 * Arithmetics Operations
+*
+**********************************************************************
 *********************************************************************/
+
+/*********************************************************************
+* Addition
+*********************************************************************/
+void Bignum::additionStep(uint8_t * result, const Bignum & num1, const Bignum & num2, uint8_t & ret, int index) const
+{
+  if (num1.dataSize > index && num2.dataSize > index) {
+    *result = (num1.data[index] + num2.data[index] + ret) % BASE;
+    ret = (num1.data[index] + num2.data[index] + ret) / BASE;
+  }
+  else if (num1.dataSize > index) {
+    *result = (num1.data[index] + ret) % BASE;
+    ret = (num1.data[index] + ret) / BASE;
+  }
+  else if (num2.dataSize > index) {
+    *result = (num2.data[index] + ret) % BASE;
+    ret = (num2.data[index] + ret) / BASE;
+  }
+  else if (ret != 0) {
+    *result = ret;
+  }
+}
+
 Bignum Bignum::operator+(const Bignum & num) const
 {
   int sign = findSign(num);
   if (sign == 0) {
-    Bignum op1 = *this;
-    Bignum op2 = num;
     if (this->neg) {
-      op1.neg = false;
-      return op2.operator-(op1);
+      return num - (+(*this));
     }
     else {
-      op2.neg = false;
-      return op1.operator-(op2);
+      return (*this) - (+num);
     }
   }
 
-  uint32_t big = *this > num ? dataSize + 1 : num.dataSize + 1;
-  uint8_t * newData = new uint8_t[big];
+  uint32_t maxSize = *this > num ? dataSize + 1 : num.dataSize + 1;
+  uint8_t * newData = new uint8_t[maxSize];
   uint8_t ret = 0;
-  Bignum result;
-  for (int i = 0; i < big; i++) {
-    if (dataSize > i && num.dataSize > i) {
-      newData[i] = (data[i] + num.data[i] + ret) % BASE;
-      ret = (data[i] + num.data[i] + ret) / BASE;
-    }
-    else if (dataSize > i) {
-      newData[i] = (data[i] + ret) % BASE;
-      ret = (data[i] + ret) / BASE;
-    }
-    else if (num.dataSize > i) {
-      newData[i] = (num.data[i] + ret) % BASE;
-      ret = (num.data[i] + ret) / BASE;
-    }
-    else {
-      if (ret != 0) {
-        newData[i] = ret;
-        result = Bignum(newData, big, sign == -1);
-        delete[] newData;
-      }
-      else {
-        result = Bignum(newData, (big - 1), sign == -1);
-        delete[] newData;
-      }
-    }
+  for (int i = 0; i < maxSize; i++) {
+    additionStep(newData + i, *this, num, ret, i);
   }
+  Bignum result = Bignum(newData, ret == 0 ? maxSize - 1 : maxSize, sign == -1);
+  delete[] newData;
   return result;
 }
 
@@ -327,6 +329,16 @@ Bignum Bignum::operator+() const
   Bignum ans = *this;
   ans.neg = false;
   return ans;
+}
+
+void Bignum::operator+=(const Bignum & num)
+{
+  *this = this->operator+(num);
+}
+
+void Bignum::operator+=(int num)
+{
+  *this = this->operator+(num);
 }
 
 Bignum Bignum::operator-(const Bignum & num) const

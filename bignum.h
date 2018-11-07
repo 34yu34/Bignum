@@ -17,8 +17,12 @@ private:
   bool operate(const Bignum & num, bool (* fptr)(int, int)) const;
   int findSign(const Bignum & num) const;
   uint32_t chop(const uint8_t d[], uint32_t currSize) const;
+
+  void additionStep(uint8_t * result, const Bignum & num1, const Bignum & num2, uint8_t & ret, int index) const;
+
   void initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) const;
   void diviseStep(Bignum & reminder, Bignum & denominator, uint8_t * newData) const;
+
 
 public:
 
@@ -57,6 +61,8 @@ public:
   Bignum operator+(int num) const;
   friend Bignum operator+(int num, const Bignum & num2);
   Bignum operator+() const;
+  void operator+=(const Bignum & num);
+  void operator+=(int num);
 
   Bignum operator-(const Bignum & num) const;
   Bignum operator-(int num) const;
