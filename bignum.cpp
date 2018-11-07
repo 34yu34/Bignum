@@ -394,7 +394,7 @@ Bignum Bignum::operator-(const Bignum & num) const
 
   uint32_t size = chop(newData, max->dataSize);
 
-  Bignum result = Bignum(newData, size, (sign == -1) ^ (invertSign));
+  Bignum result = Bignum(newData, size, (sign == -1) ^ (invertSign)); // xor operator let invert sign invert the sign
   delete[] newData;
   return result;
 }
@@ -414,6 +414,16 @@ Bignum Bignum::operator-() const
   Bignum ans = *this;
   ans.neg = !ans.neg;
   return ans;
+}
+
+void Bignum::operator-=(const Bignum & num)
+{
+  *this = this->operator-(num);
+}
+
+void Bignum::operator-=(int num)
+{
+  *this = this->operator-(num);
 }
 
 Bignum Bignum::operator*(const Bignum & num) const
