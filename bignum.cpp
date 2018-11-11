@@ -531,6 +531,14 @@ Bignum operator/(int num, const Bignum & num2)
   return Bignum(num) / num2;
 }
 
+void Bignum::operator/=(const Bignum & num) {
+  *this = this->operator/(num);
+}
+
+void Bignum::operator/=(int num) {
+  *this = this->operator/(num);
+}
+
 Bignum Bignum::operator%(const Bignum & num) const
 {
   bool sign = findSign(num) == 0;
