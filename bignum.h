@@ -75,6 +75,8 @@ public:
   Bignum operator*(const Bignum & num) const;
   Bignum operator*(int num) const;
   friend Bignum operator*(int num, const Bignum & num2);
+  void operator*=(const Bignum & num);
+  void operator*=(int num);
 
   Bignum operator/(const Bignum & num) const;
   Bignum operator/(int num) const;

@@ -466,6 +466,16 @@ Bignum operator*(int num, const Bignum & num2)
   return num2.operator*(num);
 }
 
+void Bignum::operator*=(const Bignum & num)
+{
+  *this = this->operator*(num);
+}
+
+void Bignum::operator*=(int num)
+{
+  *this = this->operator*(num);
+}
+
 void Bignum::initDivision(const Bignum & num, Bignum & quotient, Bignum & denominator, int & index) const
 {
   index = 1;
