@@ -568,3 +568,11 @@ Bignum operator%(int num, const Bignum & num2)
 {
   return Bignum(num).operator%(num2);
 }
+
+void Bignum::operator%=(const Bignum & num) {
+  *this = this->operator%(num);
+}
+
+void Bignum::operator%=(int num) {
+  *this = this->operator%(num);
+}
